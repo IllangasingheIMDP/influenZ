@@ -1,5 +1,6 @@
 const BrandModel = require('../models/brandModel');
 
+
 class BrandController {
     static async createCampaign(req, res) {
         try {
@@ -224,6 +225,30 @@ class BrandController {
           res.status(500).json({ success: false, message: 'Failed to mark notification as read' });
         }
       }
+
+
+      static async getCompanyPics(req, res) {
+        try {
+          const pics = await BrandModel.getAllCompanyPics();
+          res.status(200).json(pics);
+        } catch (err) {
+          console.error('Error fetching company pictures:', err);
+          res.status(500).json({ error: 'Internal server error' });
+        }
+      }
+
+      static async  fetchInfluencers  (req, res)  {
+        try {
+          // Fetch influencer data using the model
+          const influencers = await BrandModel.getInfluencers();
+      
+          // Send the data as JSON response
+          res.status(200).json(influencers);
+        } catch (error) {
+          console.error("Error in fetching influencers:", error);
+          res.status(500).json({ message: "Error fetching influencers" });
+        }
+      };
       
       
 }

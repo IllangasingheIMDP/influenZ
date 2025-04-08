@@ -1,18 +1,27 @@
-"use client"
+'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
+import api from '@/constants/api'; // Adjust path if needed
 
-const LogoCarousel = ({ logos = [
-  '/21.jpg',
-  '/22.png',
-  '/23.png',
-  '/24.png',
-  '/25.jpg',
-  '/26.png',
-] }) => {
+const LogoCarousel = () => {
   const scrollRef = useRef(null);
-  const duplicatedLogos = [...logos, ...logos]; // Duplicate logos for seamless looping
+  const [logos, setLogos] = useState([]);
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const res = await api.get('/brand/company-pics');
+        
+        const pics = res.data.map(b => b.company_pic);
+        setLogos([...pics, ...pics]); // duplicate for seamless scroll
+      } catch (error) {
+        console.error('Error fetching logos:', error);
+      }
+    };
+
+    fetchLogos();
+  }, []);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -20,34 +29,27 @@ const LogoCarousel = ({ logos = [
 
     let animationId;
     let startTime;
-    const duration = 40000; // Time to complete one full scroll in ms
+    const duration = 40000;
     const scrollWidth = scrollContainer.scrollWidth / 2;
 
     const scroll = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       const progress = (elapsed % duration) / duration;
-      
-      if (scrollContainer) {
-        // Reset position when first set finishes to create infinite loop illusion
-        if (scrollContainer.scrollLeft >= scrollWidth) {
-          scrollContainer.scrollLeft = 0;
-          startTime = timestamp;
-        } else {
-          scrollContainer.scrollLeft = progress * scrollWidth;
-        }
+
+      if (scrollContainer.scrollLeft >= scrollWidth) {
+        scrollContainer.scrollLeft = 0;
+        startTime = timestamp;
+      } else {
+        scrollContainer.scrollLeft = progress * scrollWidth;
       }
-      
+
       animationId = requestAnimationFrame(scroll);
     };
 
     animationId = requestAnimationFrame(scroll);
 
-    // Pause animation when user hovers
-    const handleMouseEnter = () => {
-      cancelAnimationFrame(animationId);
-    };
-
+    const handleMouseEnter = () => cancelAnimationFrame(animationId);
     const handleMouseLeave = () => {
       startTime = null;
       animationId = requestAnimationFrame(scroll);
@@ -58,12 +60,10 @@ const LogoCarousel = ({ logos = [
 
     return () => {
       cancelAnimationFrame(animationId);
-      if (scrollContainer) {
-        scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
-        scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
-      }
+      scrollContainer.removeEventListener('mouseenter', handleMouseEnter);
+      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [duplicatedLogos.length]);
+  }, [logos]);
 
   return (
     <section className="w-full py-16 bg-gradient-to-r from-gray-50 to-gray-100 overflow-hidden">
@@ -83,7 +83,7 @@ const LogoCarousel = ({ logos = [
             ref={scrollRef}
             className="flex items-center gap-16 overflow-x-hidden py-8 px-4 scroll-smooth"
           >
-            {duplicatedLogos.map((logo, index) => (
+            {logos.map((logo, index) => (
               <div 
                 key={`${logo}-${index}`} 
                 className="flex-shrink-0 h-20 w-40 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 p-4 flex items-center justify-center"
