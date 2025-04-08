@@ -29,7 +29,7 @@ const Navbar = () => {
     }
   };
   return (
-    <nav className="w-full bg-white border-b-2 border-gray-200">
+    <nav className="w-full bg-white border-b-2 z-20 relative border-gray-200">
       {/* Gradient Top Border */}
       <div className="w-full h-1 bg-gradient-to-r from-amber-300 via-fuchsia-600 to-amber-300"></div>
 
@@ -82,13 +82,19 @@ const Navbar = () => {
             Home
           </a>
           <a href="/brands/ActiveCampaigns" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Campaign
+            Active Campaigns
           </a>
-          <a href="#" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Connect
+          <a href="/brands/create_campaign" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Create Campaign
+          </a>
+          <a href="/brands/Applicants" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+           Applicants
           </a>
           <a href="/brands/pricingpage_brands" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Pricings
+          </a>
+          <a href="/brands/notifications" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Notifications
           </a>
         </div>
 
@@ -146,19 +152,26 @@ const Navbar = () => {
               className="bg-transparent text-gray-500 text-sm font-['Poppins'] focus:outline-none w-full"
             />
           </form>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+          <a href="/brands" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Home
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Analytics
+         
+          <a href="/brands/ActiveCampaigns" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Active Campaigns
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Campaign
+          <a href="/brands/create_campaign" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Create Campaign
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Connect
+          <a href="/brands/Applicants" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Applicants
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+
+          <a href="/brands/notifications" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Notifications
+          </a>
+          
+          
+          <a href="/brands/pricingpage_brands" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Pricings
           </a>
         </div>

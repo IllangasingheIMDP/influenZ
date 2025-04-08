@@ -4,7 +4,7 @@ import React from 'react';
 
 const BrandPricingPage = () => {
   return (
-    <div className="h-screen bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col justify-center overflow-hidden"
+    <div className="min-h-screen w-full overflow-y-auto bg-gradient-to-b from-indigo-50 via-purple-50 to-pink-50 flex flex-col justify-center"
     style={{
       backgroundImage: "url('/pricing_page_image-01.jpeg.jpg')",
       backgroundSize: "cover",

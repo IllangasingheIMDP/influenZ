@@ -3,18 +3,19 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import api from '@/constants/api';
-
+import { useSelector } from "react-redux";
 const Campaigns = () => {
+    const user = useSelector((state) => state.user);
     const router = useRouter();
     const [campaigns, setCampaigns] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    
     useEffect(() => {
         const fetchActiveCampaigns = async () => {
             setLoading(true);
             try {
-                const response = await api.get(`/brand/active-campaigns`);
+                const response = await api.get(`/brand/active-campaigns/${user.userId}`);
                 const data = response.data;
                 
                 if (!data.success) throw new Error(data.message);
