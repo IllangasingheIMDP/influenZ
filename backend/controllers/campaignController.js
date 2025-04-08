@@ -142,5 +142,42 @@ class campaignController {
       });
     }
   }
+
+
+  static async saveLink(req, res) {
+    const {link , task_id , userId} = req.body;
+    console.log("Link:", link); // Log the link
+    console.log("Task ID:", task_id); // Log the task ID
+    console.log("User ID:", userId); // Log the user ID
+    try{
+      const influencer_id = await influencerModel.getInfluencerId(userId); // Get influencer ID from the database
+      console.log("Influencer ID:", influencer_id); // Log the influencer ID
+      const result = await campaignModel.saveLink(link,task_id, influencer_id); // Save the link in the database
+      console.log("Result:", result); // Log the result of saving the link
+      if (result) {
+        return res.status(200).json({
+          success: true,
+          message: "Link saved successfully.",
+        });
+      } else {
+        return res.status(400).json({
+          success: false,
+          message: "Failed to save link.",
+        });
+      }
+
+    }catch (error) {
+      console.error("Error in saveLink controller:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error.",
+      });
+    }
+
+  }
+  static async getSavedLinks(req, res) {
+    
+  }
+
 }
 module.exports = campaignController;
