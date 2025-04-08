@@ -1,0 +1,94 @@
+.container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 30%;
+    border-right: 1px solid #ccc;
+    padding: 20px;
+  }
+  
+  .conversationList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .conversationList li {
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .conversationList li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .active {
+    background-color: #e0e0e0;
+  }
+  
+  .searchResults {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+  }
+  
+  .searchResults li {
+    padding: 8px;
+    cursor: pointer;
+  }
+  
+  .searchResults li:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .chat {
+    width: 70%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+  
+  .sent {
+    text-align: right;
+    margin: 10px 0;
+  }
+  
+  .received {
+    text-align: left;
+    margin: 10px 0;
+  }
+  
+  .sent p {
+    background-color: #007bff;
+    color: white;
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+  
+  .received p {
+    background-color: #e9ecef;
+    display: inline-block;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+  
+  .messageForm {
+    display: flex;
+  }
+  
+  .messageForm input {
+    flex: 1;
+    padding: 10px;
+  }
+  
+  .messageForm button {
+    padding: 10px 20px;
+  }

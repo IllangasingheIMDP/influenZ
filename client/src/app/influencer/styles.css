@@ -1,0 +1,50 @@
+.container {
+    background-color: #f5f5e5;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .profileSection {
+    background-color: #fff3cd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .profilePic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  
+  .stats p {
+    margin: 5px 0;
+  }
+  
+  .demographicsSection {
+    background-color: #fff3cd;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .charts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .charts div {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .performanceSection {
+    background-color: #fff3cd;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  h3, h4 {
+    color: #333;
+  }
