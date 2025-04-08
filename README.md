@@ -188,7 +188,7 @@ Ensure you have the following installed on your system:
    - d11@gmail.com
    - Password123$
 
-  - and for admin login
+  - and for admin login https://influen-z-git-main-dasun-illangasinghes-projects.vercel.app/admin-login
    - dasuncompetition@gmail.com
    - Password123$
 
