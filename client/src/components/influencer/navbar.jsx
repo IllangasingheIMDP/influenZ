@@ -85,11 +85,12 @@ const Navbar = () => {
           <a href="/influencer/campaign_page" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Campaign
           </a>
-          <a href="#" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Connect
-          </a>
+          
           <a href="/influencer/pricing_page" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Pricings
+          </a>
+          <a href="/influencer/notifications" className="text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Notifications
           </a>
         </div>
 
@@ -147,19 +148,18 @@ const Navbar = () => {
               className="bg-transparent text-gray-500 text-sm font-['Poppins'] focus:outline-none w-full"
             />
           </form>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+          <a href="/influencer" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Home
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Analytics
-          </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+          
+          <a href="/influencer/campaign_page" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Campaign
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
-            Connect
+          <a href="/influencer/notifications" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+            Notifications
           </a>
-          <a href="#" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
+          
+          <a href="/influencer/pricing_page" className="block text-gray-700 text-base font-medium font-['Poppins'] hover:text-gray-900">
             Pricings
           </a>
         </div>
