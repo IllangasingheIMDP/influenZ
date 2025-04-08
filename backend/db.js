@@ -24,7 +24,7 @@ const pool =new Pool({
     rejectUnauthorized: true,  // Ensure the server's certificate is valid
   },
   
-  max: 3,  // Change these when deploy
+  max: 15,  // Change these when deploy
   idleTimeoutMillis: 10000,  // Reduce to 10s to free idle connections faster
   connectionTimeoutMillis: 5000, // Increase from 2000 to 10000ms
 });
