@@ -144,6 +144,8 @@ class BrandController {
 
       static async  acceptApplicant  (req, res)  {
         try {
+          const USERID = req.user.userId;
+          console.log(USERID)
           const { campaign_id, user_id } = req.body;
       
           const influencer = await BrandModel.getInfluencerByUserId(user_id);
@@ -154,7 +156,7 @@ class BrandController {
       
           await BrandModel.assignTasksToInfluencer(tasks, influencer.influencer_id, currentDate);
       
-          await BrandModel.acceptInfluencer(campaign_id, influencer.influencer_id);
+          await BrandModel.acceptInfluencer(campaign_id, influencer.influencer_id,USERID,user_id);
       
           res.json({ message: "Applicant accepted and tasks assigned." });
         } catch (error) {
