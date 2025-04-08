@@ -275,7 +275,7 @@ export default function SearchPage() {
             <div
               key={brand.user_id}
               className="bg-gradient-to-r from-pink-200 to-yellow-200 rounded-xl p-4 shadow-lg hover:shadow-xl transition-shadow"
-              onClick={() => router.push(`/profile/${brand.user_id}`)}
+              onClick={() => router.push(`/influencer/brand_profile/${brand.user_id}`)}
             >
               <div className="flex items-center space-x-4">
                 <img
