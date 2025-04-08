@@ -20,5 +20,7 @@ router.get('/details', authMiddleware(['brand']), BrandController.getUserBrands)
 router.get("/most-interacted", authMiddleware(['brand']), BrandController.getMostInteractedInfluencers);
 router.get('/notifications',authMiddleware(['brand']), BrandController.getNotifications);
 router.patch('/notifications/:notificationId/read',authMiddleware(['brand']), BrandController.markAsRead);
+router.get('/company-pics', BrandController.getCompanyPics);
+router.get('/influencers', BrandController.fetchInfluencers);
 
 module.exports = router;
