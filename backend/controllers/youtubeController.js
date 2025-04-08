@@ -47,7 +47,7 @@ const YoutubeController = {
     try {
       const { tokens } = await oauth2Client.getToken(code);
       await YoutubeModel.saveTokens(userId, tokens);
-      res.redirect('http://localhost:3000/influencer/verification');
+      res.redirect('https://influen-lmy30k48k-dasun-illangasinghes-projects.vercel.app/influencer/verification');
     } catch (error) {
       console.error('Error in OAuth callback:', error);
       res.status(500).json({ message: 'Authentication failed' });
