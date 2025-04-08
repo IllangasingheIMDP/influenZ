@@ -24,7 +24,7 @@ class BrandController {
     static async getActiveCampaigns(req, res) {
         try {
             console.log("kasun")
-            const userID = req.user.userId; // Extracted from token middleware
+            const userID = req.params.userId; // Extracted from token middleware
             console.log(userID)
 
             const campaigns = await BrandModel.getActiveCampaigns(userID);
@@ -169,8 +169,10 @@ class BrandController {
       static async getUserBrands  (req, res)  {
         try {
             
-          const user_id = req.user.userId;
-          const brands = await BrandModel.getBrandsByUserId(user_id);
+          const userId=req.params.userId;
+          
+          const brands = await BrandModel.getBrandsByUserId(userId);
+          
           
           res.json(brands);
         } catch (error) {
@@ -181,7 +183,7 @@ class BrandController {
 
       static async getMostInteractedInfluencers  (req, res)  {
         try {
-          const userId = req.user.userId;
+          const userId = req.params.userId;
       
           const influencers = await BrandModel.getMostInteractedInfluencersByUserId(userId);
       

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/constants/api"; // Adjust path based on your project structure
 
-export default function CampaignsCard() {
+export default function CampaignsCard({userId,public_available}) {
   const router = useRouter();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,7 +12,7 @@ export default function CampaignsCard() {
     const fetchCampaigns = async () => {
       setLoading(true);
       try {
-        const response = await api.get("/brand/active-campaigns");
+        const response = await api.get(`/brand/active-campaigns/${userId}`);
         
         // Fix: Access the campaigns array from the response data
         setCampaigns(response.data.campaigns || []);
@@ -114,14 +114,14 @@ export default function CampaignsCard() {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            {!public_available && <div className="flex justify-end">
               <button 
                 onClick={() => handleViewDetails(campaign.campaign_id)}
                 className="text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-1 rounded-md transition-colors"
               >
                 View Details
               </button>
-            </div>
+            </div>}
 
             {index < campaigns.length - 1 && (
               <div className="h-1 w-full bg-gradient-to-r from-indigo-400 to-purple-500 mt-4"></div>

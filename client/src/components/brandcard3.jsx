@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import api from "@/constants/api";
 
-const MostInteractedInfluencers = () => {
+const MostInteractedInfluencers = ({userId}) => {
   const [influencers, setInfluencers] = useState([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchInfluencers = async () => {
       try {
-        const res = await api.get("/brand/most-interacted");
+        const res = await api.get(`/brand/most-interacted/${userId}`);
         setInfluencers(res.data.influencers || []);
       } catch (err) {
         console.error("Error fetching influencers:", err);

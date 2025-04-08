@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "@/constants/api"; // Adjust path based on your project structure
 
-export default function BrandCard() {
+export default function BrandCard({ userId }) {
   const [brand, setBrand] = useState({
     company_name: "",
     reputation_score: 0,
@@ -16,7 +16,7 @@ export default function BrandCard() {
     const fetchBrandDetails = async () => {
       setLoading(true);
       try {
-        const response = await api.get("/brand/details");
+        const response = await api.get(`/brand/details/${userId}`);
         console.log("Brand details:", response.data);
         
         // Clean up potentially inappropriate content
@@ -24,7 +24,7 @@ export default function BrandCard() {
           ...response.data,
           company_details: sanitizeContent(response.data.company_details)
         };
-        
+        console.log("Cleaned data:", cleanedData);
         setBrand(cleanedData);
         setError(null);
       } catch (err) {
@@ -191,7 +191,7 @@ export default function BrandCard() {
       )}
       
       {/* Action buttons */}
-      <div className="pt-4 border-t border-gray-100 flex justify-between">
+      {/* <div className="pt-4 border-t border-gray-100 flex justify-between">
         <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-md transition-colors flex items-center">
           <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -204,7 +204,7 @@ export default function BrandCard() {
           </svg>
           View Analytics
         </button>
-      </div>
+      </div> */}
     </div>
   );
 }
