@@ -181,6 +181,16 @@ Ensure you have the following installed on your system:
 3. **Access the Application**
    - Open `http://localhost:3000` in your browser.
    - Log in as an influencer, brand, or admin to test the features.
+   - and also for influencer login test user email password are 
+   - dasunpramodya616@gmail.com
+  - Password123$
+  - and for test brand 
+  - d11@gmail.com
+  - Password123$
+
+  - and for admin login
+  - dasuncompetition@gmail.com
+  - Password123$
 
 ## Team Members
 - **Illangasinghe I.M.D.P**
