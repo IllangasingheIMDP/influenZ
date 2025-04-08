@@ -175,9 +175,7 @@ class campaignController {
     }
 
   }
-  static async getSavedLinks(req, res) {
-    
-  }
+
 
 }
 module.exports = campaignController;

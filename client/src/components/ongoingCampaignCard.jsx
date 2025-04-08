@@ -9,17 +9,29 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [isLoadingTasks, setIsLoadingTasks] = useState(false);
-  const [isApplying, setIsApplying] = useState(false); // Track applying state
-  const [error, setError] = useState(null); // Track errors
-  const [taskLinks, setTaskLinks] = useState({}); // Store links for tasks
+  const [isApplying, setIsApplying] = useState(false);
+  const [error, setError] = useState(null);
+  const [taskLinks, setTaskLinks] = useState({});
   const data = campaign;
 
-  // Fetch tasks of the campaign
+  // Fetch tasks of the campaign and initialize taskLinks with existing links
   const fetchTasks = async (campaignId) => {
     setIsLoadingTasks(true);
     try {
       const response = await api.get(`/user/getcampaigntasks/${campaignId}`);
-      setTasks(response.data.data); // Set tasks to the state
+      const fetchedTasks = response.data.data;
+      setTasks(fetchedTasks);
+      console.log("fetchedTasks", fetchedTasks);
+
+      const initialTaskLinks = {};
+      fetchedTasks.forEach((task) => {
+        if (task.link) {
+          initialTaskLinks[task.task_id] = task.link;
+        }
+      });
+      setTaskLinks(initialTaskLinks);
+      console.log("taskLinks", initialTaskLinks);
+
       setIsLoadingTasks(false);
     } catch (err) {
       console.error("Error fetching tasks:", err);
@@ -27,11 +39,10 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
     }
   };
 
-
-  // Handle saving a link for a task
+  // Handle saving or updating a link for a task
   const handleSaveLink = async (taskId) => {
     const link = taskLinks[taskId];
-    console.log("Saving link:", link, "for task ID:", taskId);
+    console.log("Saving/Updating link:", link, "for task ID:", taskId);
     if (!link) {
       setError("Please enter a link before saving.");
       return;
@@ -45,15 +56,17 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
       });
 
       if (response.data.success) {
-        alert("Link saved successfully!");
+        alert(`Link ${tasks.find(t => t.task_id === taskId)?.link ? "updated" : "saved"} successfully!`);
+        fetchTasks(data.campaign_id); // Refresh tasks to sync with backend
+        setError(null); // Clear any previous errors
       } else {
-        setError(response.data.message || "Failed to save the link.");
+        setError(response.data.message || "Failed to save/update the link.");
       }
     } catch (err) {
       setError(
-        err.response?.data?.message || "An error occurred while saving the link."
+        err.response?.data?.message || "An error occurred while saving/updating the link."
       );
-      console.error("Error saving link:", err);
+      console.error("Error saving/updating link:", err);
     }
   };
 
@@ -68,7 +81,7 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
   // Format date - card version (short format)
   const formatCardDate = (dateString) => {
     const date = new Date(dateString);
-    return new Date(date).toLocaleDateString("en-US", {
+    return date.toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
@@ -78,7 +91,7 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
   // Format date - modal version (long format)
   const formatModalDate = (dateString) => {
     const date = new Date(dateString);
-    return new Date(date).toLocaleDateString("en-US", {
+    return date.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
@@ -97,7 +110,7 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
 
   return (
     <>
-      {/* Campaign Card */}
+      {/* Campaign Card (unchanged) */}
       <div
         className="relative w-64 h-96 rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 ease-in-out bg-white shadow-lg"
         style={{
@@ -288,7 +301,7 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
                 </div>
               </div>
 
-              {/* Tasks with Input Fields and Save Buttons */}
+              {/* Tasks with Input Fields and Save/Update Buttons */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Tasks
@@ -318,11 +331,16 @@ const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
                             />
                             <button
                               onClick={() => handleSaveLink(task.task_id)}
-                              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                              className="font-medium py-2 px-4 rounded-lg bg-green-600 hover:bg-green-700 text-white transition-colors"
                             >
-                              Save
+                              {task.link ? "Update" : "Save"}
                             </button>
                           </div>
+                          {task.link && (
+                            <p className="text-sm text-green-600 mt-1">
+                              Current link: {task.link}
+                            </p>
+                          )}
                         </li>
                       ))
                     ) : (
