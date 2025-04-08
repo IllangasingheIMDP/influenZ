@@ -1,0 +1,82 @@
+InfluenceZ
+
+This project is an influencer platform where brands can manage influencer campaigns and influencers can apply for them. The platform has two main roles: Brand and Influencer.
+Features
+
+    Brands can create campaigns, view influencers, and accept/reject applicants.
+
+    Influencers can apply to campaigns based on their profile and stats.
+
+    Real-time updates on campaign status and influencer interactions.
+
+Live Demo
+
+You can access the live demo here:
+https://influen-z-git-main-dasun-illangasinghes-projects.vercel.app/
+
+Roles and Default Login
+Brand
+
+    Email: d11@gmail.com
+
+    Password: Password123$
+
+Influencer
+
+    Email: dasunpramodya616@gmail.com
+
+    Password: Password123$
+
+Tech Stack
+Frontend
+
+    Framework: Next.js
+
+    Styling: Tailwind CSS
+
+    JavaScript: ES6+
+
+Backend
+
+    Framework: Node.js (Express)
+
+    Database: PostgreSQL
+
+Setup Instructions
+Prerequisites
+
+    Node.js (v14 or higher)
+
+    npm (v6 or higher)
+
+Frontend
+
+    Navigate to the frontend folder:
+
+cd client
+
+Install dependencies:
+
+npm install
+
+Run the development server:
+
+    npm run dev
+
+    The frontend should now be running on http://localhost:3000.
+
+Backend
+
+    Navigate to the backend folder:
+
+cd backend
+
+Install dependencies:
+
+npm install
+
+Run the development server:
+
+npm run dev
+
+The backend should now be running on http://localhost:5000.
