@@ -1,32 +1,43 @@
 "use client";
-import api from '@/constants/api';
-import { useSelector } from 'react-redux';
-import GradientCircularProgress from '@/components/GradientCircularProgress';
-import React, { useState, useEffect } from 'react';
-import CampaignCard from '../../../components/campaigncard';
-import OngoingCampaignCard from '@/components/ongoingCampaignCard';
+import api from "@/constants/api";
+import { useSelector } from "react-redux";
+import GradientCircularProgress from "@/components/GradientCircularProgress";
+import React, { useState, useEffect } from "react";
+import CampaignCard from "../../../components/campaigncard";
+import OngoingCampaignCard from "@/components/ongoingCampaignCard";
+import AppliedCampaigns from "@/components/AppliedCampaigns"; // Importing the AppliedCampaigns component
 
 const CampaignPage = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [ongoingCampaigns, setOngoingCampaigns] = useState([]);
+  const [appliedCampaigns, setAppliedCampaigns] = useState([]); // Renamed to camelCase for consistency
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchType, setSearchType] = useState('name'); // 'name' or 'keywords'
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchType, setSearchType] = useState("name"); // 'name' or 'keywords'
 
   const { userId } = useSelector((state) => state.user);
 
   useEffect(() => {
     const fetchCampaigns = async () => {
       try {
-        const responseAllCampaigns = await api.get('/campaign/campaigncarddetails');
+        const responseAllCampaigns = await api.get(
+          "/campaign/campaigncarddetails"
+        );
         setCampaigns(responseAllCampaigns.data.data);
 
-        const responseOngoingCampaigns = await api.get('user/getongoingcampaigns');
+        const responseOngoingCampaigns = await api.get(
+          "user/getongoingcampaigns"
+        );
         setOngoingCampaigns(responseOngoingCampaigns.data.data);
+
+        const responseAppliedCampaigns = await api.get(
+          "influencer/getappliedcampaigns"
+        );
+        setAppliedCampaigns(responseAppliedCampaigns.data.data);
         setIsLoading(false);
       } catch (err) {
-        setError('Error fetching campaign data');
+        setError("Error fetching campaign data");
         setIsLoading(false);
       }
     };
@@ -35,21 +46,37 @@ const CampaignPage = () => {
   }, []);
 
   // Filter campaigns based on search term and type
-  const filteredCampaigns = campaigns.filter(campaign => {
-    if (searchType === 'name') {
-      return campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredCampaigns = campaigns.filter((campaign) => {
+    if (searchType === "name") {
+      return campaign.campaign_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     } else {
-      return campaign.keywords?.some(keyword => 
+      return campaign.keywords?.some((keyword) =>
         keyword.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
   });
 
-  const filteredOngoingCampaigns = ongoingCampaigns.filter(campaign => {
-    if (searchType === 'name') {
-      return campaign.campaign_name.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredOngoingCampaigns = ongoingCampaigns.filter((campaign) => {
+    if (searchType === "name") {
+      return campaign.campaign_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
     } else {
-      return campaign.keywords?.some(keyword => 
+      return campaign.keywords?.some((keyword) =>
+        keyword.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+  });
+
+  const filteredAppliedCampaigns = appliedCampaigns.filter((campaign) => {
+    if (searchType === "name") {
+      return campaign.campaign_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+    } else {
+      return campaign.keywords?.some((keyword) =>
         keyword.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
@@ -57,7 +84,7 @@ const CampaignPage = () => {
 
   if (isLoading) {
     return (
-      <div className='w-full h-screen flex justify-center items-center'>
+      <div className="w-full h-screen flex justify-center items-center">
         <GradientCircularProgress size={100} />
       </div>
     );
@@ -69,8 +96,6 @@ const CampaignPage = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Campaigns</h1>
-
       {/* Search Bar */}
       <div className="mb-8">
         <div className="relative flex items-center max-w-2xl mx-auto">
@@ -79,7 +104,9 @@ const CampaignPage = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder={`Search campaigns by ${searchType === 'name' ? 'name' : 'keywords'}...`}
+              placeholder={`Search campaigns by ${
+                searchType === "name" ? "name" : "keywords"
+              }...`}
               className="w-full pl-12 pr-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-300"
             />
             <svg
@@ -96,25 +123,25 @@ const CampaignPage = () => {
               />
             </svg>
           </div>
-          
+
           {/* Toggle between name and keyword search */}
           <div className="ml-4 flex items-center bg-gray-100 rounded-full p-1">
             <button
-              onClick={() => setSearchType('name')}
+              onClick={() => setSearchType("name")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                searchType === 'name'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-200'
+                searchType === "name"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-600 hover:bg-gray-200"
               }`}
             >
               Name
             </button>
             <button
-              onClick={() => setSearchType('keywords')}
+              onClick={() => setSearchType("keywords")}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                searchType === 'keywords'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-200'
+                searchType === "keywords"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-600 hover:bg-gray-200"
               }`}
             >
               Keywords
@@ -123,25 +150,54 @@ const CampaignPage = () => {
         </div>
       </div>
 
-      {/* Your ongoing campaigns */}
+      {/* Your Ongoing Campaigns */}
       {filteredOngoingCampaigns.length > 0 && (
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Your Ongoing Campaigns</h2>
+          <h2 className="text-2xl font-semibold mb-4">
+            Your Ongoing Campaigns
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredOngoingCampaigns.map((campaign) => (
-              <OngoingCampaignCard key={campaign.campaign_id}  campaign={campaign} userId={userId} />
+              <OngoingCampaignCard
+                key={campaign.campaign_id}
+                campaign={campaign}
+                userId={userId}
+              />
             ))}
           </div>
         </div>
       )}
 
-      {/* All campaigns */}
+      {/* Your Applied Campaigns */}
+      {filteredAppliedCampaigns.length > 0 && (
+        <div className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">
+            Your Applied Campaigns
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {filteredAppliedCampaigns.map((campaign) => (
+              <AppliedCampaigns
+                key={campaign.campaign_id}
+                campaign={campaign}
+                userId={userId}
+                alreadyApplied={true} // Passing alreadyApplied as true since these are applied campaigns
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* All Campaigns */}
       <div>
         <h2 className="text-2xl font-semibold mb-4">All Campaigns</h2>
         {filteredCampaigns.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredCampaigns.map((campaign) => (
-              <CampaignCard key={campaign.campaign_id} campaign={campaign} userId={userId} />
+              <CampaignCard
+                key={campaign.campaign_id}
+                campaign={campaign}
+                userId={userId}
+              />
             ))}
           </div>
         ) : (

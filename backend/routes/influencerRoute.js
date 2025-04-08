@@ -20,5 +20,8 @@ router.put('/update-tags', authMiddleware(['influencer']), InfluencerController.
 router.get('/verified-influencers-and-brands', authMiddleware(['admin','brand','influencer']), InfluencerController.getAllInfluencersVerified);
 router.post('/savelink', authMiddleware(['influencer']), campaignController.saveLink);
 
+router.get('/getappliedcampaigns', authMiddleware(['influencer']), campaignController.getAppliedCampaigns);
+
+
 
 module.exports = router;

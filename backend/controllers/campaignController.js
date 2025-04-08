@@ -175,6 +175,45 @@ class campaignController {
     }
 
   }
+static async getAppliedCampaigns(req, res) {
+  const userId = req.user.userId; // Assuming you have user ID from the request
+  try {
+    const influencer_id = await influencerModel.getInfluencerId(userId); // Get influencer ID from the database
+    console.log("Influencer ID:", influencer_id); // Log the influencer ID
+
+    // Check if influencer_id was found
+    if (!influencer_id) {
+      return res.status(404).json({
+        success: false,
+        message: "Influencer not found.",
+      });
+    }
+
+    const campaigns = await campaignModel.getAppliedCampaigns(influencer_id); // Get applied campaigns for the influencer
+
+    // If campaigns exist, send them in the response
+    if (campaigns && campaigns.length > 0) {
+      console.log("Applied Campaigns found:", campaigns); // Log the retrieved applied campaigns
+      return res.status(200).json({
+        success: true,
+        data: campaigns, // Return the applied campaigns
+      });
+    } else {
+      // If no applied campaigns, return an empty array (not an error)
+      console.log("No applied campaigns found for user");
+      return res.status(200).json({
+        success: true,
+        data: [], // Empty array for no applied campaigns
+      });
+    }
+  } catch (error) {
+    console.error("Error in getAppliedCampaigns controller:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
+  }
+}
 
 
 }
