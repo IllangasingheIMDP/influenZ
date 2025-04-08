@@ -118,7 +118,7 @@ class AuthController {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
-      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
       res.status(200).json({success: true, message: 'Login successful' });
     } catch (error) {
       res.status(500).json({success: false, message: error.message });
@@ -137,7 +137,7 @@ class AuthController {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
-      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
       res.status(200).json({success: true, message: 'Login successful' });
     } catch (error) {
       res.status(500).json({success: false, message: error.message });
@@ -155,7 +155,7 @@ class AuthController {
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
       );
-      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
       res.status(200).json({success: true, message: 'Login successful' });
     } catch (error) {
       res.status(500).json({success: false, message: error.message });

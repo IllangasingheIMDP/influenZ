@@ -44,7 +44,7 @@ class UserController {
       );
 
       // Set the cookie
-      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
+      res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'none' });
 
       // Send success response
       res.status(200).json({
