@@ -408,9 +408,12 @@ export default function Register() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
             >
-              <div className="w-16 h-16 bg-blue-400 rounded-lg shadow-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">LOGO</span>
-              </div>
+               <Image
+                            src="/logo_inf.png"
+                            width={50}
+                            height={50}
+                            alt="Register Image"
+                          />
             </motion.div>
           </div>
           <div className="absolute inset-0 flex items-center justify-center rounded-tl-lg rounded-bl-lg">
