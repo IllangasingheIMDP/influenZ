@@ -1,9 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import { FaUser, FaYoutube } from "react-icons/fa";
+import { FaUser, FaYoutube, FaEnvelope } from "react-icons/fa";
 import api from "@/constants/api"
 
 const CampaignTasks = () => {
@@ -26,6 +25,8 @@ const CampaignTasks = () => {
     const fetchTasks = async () => {
       try {
         const response = await api.get(`/brand/tasks/${campaign_id}`);
+        console.log(response.data);
+        // Assuming response.data contains email addresses
         setTasks(response.data);
       } catch (err) {
         setError("Failed to load tasks");
@@ -47,6 +48,11 @@ const CampaignTasks = () => {
     const match = url.match(regExp);
     
     return (match && match[2].length === 11) ? match[2] : null;
+  };
+  
+  // Function to handle email click
+  const handleEmailClick = (email) => {
+    window.location.href = `mailto:${email}`;
   };
   
   // Group tasks by description
@@ -150,6 +156,7 @@ const CampaignTasks = () => {
                           <th className="py-3 px-4 text-left font-medium">Completion</th>
                           <th className="py-3 px-4 text-left font-medium">Reach</th>
                           <th className="py-3 px-4 text-left font-medium">Link</th>
+                          <th className="py-3 px-4 text-left font-medium">Contact</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -161,6 +168,9 @@ const CampaignTasks = () => {
                           
                           // Extract YouTube video ID
                           const videoId = extractYoutubeVideoId(task.link);
+                          
+                          // Extract email from response data
+                          const email = task.email || "";
                           
                           return (
                             <tr key={task.task_id} className="border-t border-gray-100">
@@ -226,6 +236,20 @@ const CampaignTasks = () => {
                                   </a>
                                 ) : (
                                   <span className="text-gray-500">No link</span>
+                                )}
+                              </td>
+                              <td className="py-3 px-4">
+                                {email ? (
+                                  <button
+                                    onClick={() => handleEmailClick(email)}
+                                    className="flex items-center gap-1 px-3 py-1 bg-green-100 text-green-600 rounded-full hover:bg-green-200 transition-colors"
+                                    title={email}
+                                  >
+                                    <FaEnvelope />
+                                    <span>Email</span>
+                                  </button>
+                                ) : (
+                                  <span className="text-gray-500">No email</span>
                                 )}
                               </td>
                             </tr>

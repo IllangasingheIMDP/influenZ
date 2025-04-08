@@ -15,7 +15,7 @@ router.get("/tasks/:campaign_id", BrandController.getTasksofCampaign);
 router.get("/get-verified-influencers",authMiddleware(['brand','influencer']), influencerController.getAllInfluencersVerified);
 router.get("/applied-influencers",authMiddleware(['brand']), BrandController.getAppliedInfluencers);
 router.put('/reject', authMiddleware(['brand']), BrandController.rejectInfluencer);
-router.post("/accept-applicant", BrandController.acceptApplicant);
+router.post("/accept-applicant",authMiddleware(['brand']), BrandController.acceptApplicant);
 router.get('/details', authMiddleware(['brand']), BrandController.getUserBrands);
 router.get("/most-interacted", authMiddleware(['brand']), BrandController.getMostInteractedInfluencers);
 router.get('/notifications',authMiddleware(['brand']), BrandController.getNotifications);
