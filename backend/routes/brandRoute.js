@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/create_campaign',authMiddleware(['brand']),BrandController.createCampaign);
 //router.get('/add-tasks',authMiddleware(['brand']),BrandController.addTask)
-router.get('/active-campaigns/:userId', authMiddleware(['brand']), BrandController.getActiveCampaigns);
+router.get('/active-campaigns/:userId', authMiddleware(['brand','influencer']), BrandController.getActiveCampaigns);
 router.get("/addtask/:campaign_id",authMiddleware(['brand']), BrandController.getTasks);
 router.post("/addtask/:campaign_id",authMiddleware(['brand']), BrandController.createTask);
 router.get("/tasks/:campaign_id", BrandController.getTasksofCampaign);
@@ -17,7 +17,7 @@ router.get("/applied-influencers",authMiddleware(['brand']), BrandController.get
 router.put('/reject', authMiddleware(['brand']), BrandController.rejectInfluencer);
 router.post("/accept-applicant",authMiddleware(['brand']), BrandController.acceptApplicant);
 router.get('/details/:userId', authMiddleware(['brand','influencer']), BrandController.getUserBrands);
-router.get("/most-interacted/:userId", authMiddleware(['brand']), BrandController.getMostInteractedInfluencers);
+router.get("/most-interacted/:userId", authMiddleware(['brand','influencer']), BrandController.getMostInteractedInfluencers);
 
 router.get('/notifications',authMiddleware(['brand','influencer']), BrandController.getNotifications);
 router.patch('/notifications/:notificationId/read',authMiddleware(['brand','influencer']), BrandController.markAsRead);
