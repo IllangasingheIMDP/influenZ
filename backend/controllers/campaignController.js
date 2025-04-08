@@ -215,5 +215,6 @@ static async getAppliedCampaigns(req, res) {
   }
 }
 
+
 }
 module.exports = campaignController;

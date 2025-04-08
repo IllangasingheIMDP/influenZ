@@ -60,9 +60,9 @@ JOIN
   }
   static async getCampaignTasks(campaignId) {
     try {
-      const query = `select task_id,description , due_date , status
-                    from tasks
-                    where campaign_id = $1`;
+      const query = `select t.task_id,description , due_date , t.status , it.link
+from tasks t join influencertasks it on t.task_id = it.task_id
+where t.campaign_id = $1;`;
       const values = [campaignId];
       const result = await pool.query(query, values);
       return result.rows; // Returns rows (ongoing campaign data)
