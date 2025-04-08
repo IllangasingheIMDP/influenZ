@@ -33,7 +33,7 @@ class BrandModel {
         throw new Error(`Database error: ${error.message}`);
       }
     }
-    static async createCampaign(userID, name, description, goal, budget, startDate, endDate, youtube, facebook, instagram, tiktok) {
+    static async createCampaign(userID, name, description, goal, budget, startDate, endDate, youtube, facebook, instagram, tiktok,camp_img) {
         try {
             // Step 1: Get the brand_id related to the given userID
             const brandQuery = `
@@ -50,12 +50,12 @@ class BrandModel {
 
             // Step 2: Insert new campaign using the retrieved brand_id
             const campaignQuery = `
-                INSERT INTO campaigns (brand_id, name, description, goals, budget, start_date, end_date, status, youtube, facebook, instagram, tiktok)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, 'draft', $8, $9, $10, $11)
+                INSERT INTO campaigns (brand_id, name, description, goals, budget, start_date, end_date, status, youtube, facebook, instagram, tiktok,camp_img)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, 'draft', $8, $9, $10, $11,$12)
                 RETURNING *;
             `;
 
-            const values = [brandID, name, description, goal, budget, startDate, endDate, youtube, facebook, instagram, tiktok];
+            const values = [brandID, name, description, goal, budget, startDate, endDate, youtube, facebook, instagram, tiktok,camp_img];
             
             // Debugging log
             const result = await pool.query(campaignQuery, values);
@@ -86,7 +86,7 @@ class BrandModel {
             const brandID = brandResult.rows[0].brand_id;
             console.log(brandID,"brand");
             const query = `
-                SELECT campaign_id,name, description, start_date, end_date, goals, budget
+                SELECT campaign_id,name, description, start_date, end_date, goals, budget,camp_img
                 FROM campaigns
                 WHERE brand_id = $1 AND status = 'active' AND end_date >= CURRENT_DATE;
             `;
