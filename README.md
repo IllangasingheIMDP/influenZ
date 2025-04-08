@@ -86,16 +86,23 @@ Ensure you have the following installed on your system:
 3. **Set Up Environment Variables**
    Create a `.env` file in the `backend` directory and add the following:
    ```env
-   DATABASE_URL=postgres://username:password@localhost:5432/influenz_db
-   JWT_SECRET=your_jwt_secret
-   SESSION_SECRET=your_session_secret
-   EMAIL_USER=your_gmail@gmail.com
-   EMAIL_PASS=your_gmail_app_password
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   REDIS_URL=redis://default:your_redis_password@your_redis_host:your_redis_port
-   PORT=5000
+
+   DB_URL=postgres://avnadmin:AVNS_6jNxQrXOhsycMOLn1F0@influenz-dasuncompetition-42d7.c.aivencloud.com:16960/defaultdb?sslmode=require
+    SSL_CA_PATH=ca.pem
+    JWT_SECRET=influenz
+
+    CLOUDINARY_CLOUD_NAME=dacknfqtw
+    CLOUDINARY_API_KEY=228491221412459
+    CLOUDINARY_API_SECRET=bx1iSEYnMXw4lYUBjULQFyLejHo
+
+    GOOGLE_CLIENT_ID=66408670808-oreo8cu86nb2qm9jhrdhap2glh822pik.apps.googleusercontent.com
+    GOOGLE_CLIENT_SECRET=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
+    GOOGLE_REDIRECT_URI=https://influenz-production.up.railway.app/api/youtube/callback
+    SESSION_SECRET=your_random_secret_string
+    PORT=5000
+    EMAIL_PASS=akee ubej knlx earq
+    EMAIL_USER=dasunpramodya616uni@gmail.com
+
    ```
    - Replace `DATABASE_URL` with your PostgreSQL connection string.
    - Replace `REDIS_URL` with your Redis connection string (e.g., from Redis Cloud).
