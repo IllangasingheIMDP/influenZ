@@ -121,6 +121,33 @@ JOIN
       throw new Error("Error saving link");
     }
   }
+  static async getAppliedCampaigns(influencer_id) {
+    try{
+      const query = `SELECT 
+                  ci.campaign_id,
+                  c.name AS campaign_name,
+                  b.company_name,
+                  c.description,
+                  c.goals,
+                  c.budget,
+                  c.start_date AS startdate,
+                  c.end_date AS enddate,
+                  c.camp_img,
+                  c.keywords
+              FROM campaigninfluencers ci
+              JOIN campaigns c ON ci.campaign_id = c.campaign_id
+              JOIN brands b ON c.brand_id = b.brand_id
+              WHERE ci.status = 'applied' and ci.influencer_id=$1;`;
+      const values = [influencer_id];
+      const result = await pool.query(query, values);
+      return result.rows; // Returns rows (ongoing campaign data)
+    }catch (error) {
+      console.error("Error retrieving ongoing campaigns:", error);
+      throw error; // Propagate error to the controller
+    }
+
+
+  }
 }
 
 module.exports = CampaignModel;
