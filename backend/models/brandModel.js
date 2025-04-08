@@ -380,7 +380,27 @@ class BrandModel {
         }
       }
     
+      static async getAllCompanyPics() {
+        const result = await pool.query('SELECT company_pic FROM brands');
+        return result.rows;
+      }
     
+
+      static async getInfluencers() {
+        try {
+          const [results] = await pool.query(`
+            SELECT u."firstName", u."lastName", i.profile_pic
+            FROM users u
+            JOIN influencers i ON u.user_id = i.user_id
+          `);
+      
+          // If results is an object containing rows, use `results.rows`
+          return results.rows || results; // Fallback to `results` if `rows` is undefined
+        } catch (error) {
+          throw new Error("Error fetching influencers: " + error.message);
+        }
+      }
+      
 
 
 

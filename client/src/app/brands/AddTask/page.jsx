@@ -92,17 +92,17 @@ const CampaignTasks = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-12">
+        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-yellow-50 to-purple-100 py-12">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
                 {/* Header */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
+                <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-purple-100">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center">
                         <div>
-                            <h2 className="text-3xl font-extrabold text-gray-800 tracking-tight">Campaign Tasks</h2>
+                            <h2 className="text-3xl font-extrabold bg-gradient-to-r from-purple-600 to-yellow-500 bg-clip-text text-transparent tracking-tight">Campaign Tasks</h2>
                             <p className="mt-1 text-gray-500">Manage and organize your campaign deliverables</p>
                         </div>
                         <div className="mt-4 md:mt-0">
-                            <span className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+                            <span className="inline-flex items-center px-4 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800 border border-purple-200">
                                 Campaign ID: {campaign_id || "None"}
                             </span>
                         </div>
@@ -110,13 +110,13 @@ const CampaignTasks = () => {
                 </div>
 
                 {/* Task Form */}
-                <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-                    <h3 className="text-xl font-bold text-gray-800 flex items-center mb-4">
-                        <FaPlus className="text-indigo-500 mr-2" /> Add New Task
+                <div className="bg-white rounded-2xl shadow-xl p-8 mb-8 border border-purple-100">
+                    <h3 className="text-xl font-bold text-gray-800 flex items-center mb-6">
+                        <FaPlus className="text-yellow-500 mr-2" /> Add New Task
                     </h3>
-                    <form onSubmit={handleSubmit} className="space-y-5">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                                 Task Description
                             </label>
                             <textarea
@@ -124,21 +124,21 @@ const CampaignTasks = () => {
                                 name="description"
                                 value={formData.description}
                                 onChange={handleInputChange}
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                                className="w-full p-4 border border-purple-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                                 placeholder="Describe the task in detail..."
                                 rows="3"
                                 required
                             ></textarea>
                         </div>
                         
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="due_date" className="block text-sm font-medium text-gray-700 mb-2">
                                     Due Date
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <FaCalendarAlt className="text-gray-400" />
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <FaCalendarAlt className="text-purple-400" />
                                     </div>
                                     <input
                                         type="date"
@@ -146,19 +146,19 @@ const CampaignTasks = () => {
                                         name="due_date"
                                         value={formData.due_date}
                                         onChange={handleInputChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                                        className="pl-12 p-4 w-full border border-purple-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                                         required
                                     />
                                 </div>
                             </div>
 
                             <div>
-                                <label htmlFor="goal" className="block text-sm font-medium text-gray-700 mb-1">
+                                <label htmlFor="goal" className="block text-sm font-medium text-gray-700 mb-2">
                                     Goal (Numeric)
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <FaFlag className="text-gray-400" />
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <FaFlag className="text-purple-400" />
                                     </div>
                                     <input
                                         type="number"
@@ -166,7 +166,7 @@ const CampaignTasks = () => {
                                         name="goal"
                                         value={formData.goal}
                                         onChange={handleInputChange}
-                                        className="pl-10 p-3 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                                        className="pl-12 p-4 w-full border border-purple-200 rounded-xl focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
                                         placeholder="Enter numeric goal"
                                         required
                                     />
@@ -180,10 +180,10 @@ const CampaignTasks = () => {
                                 {Object.entries(platformConfig).map(([platform, config]) => (
                                     <label 
                                         key={platform} 
-                                        className={`flex items-center px-4 py-2 rounded-lg border transition-all cursor-pointer
+                                        className={`flex items-center px-4 py-2 rounded-xl border-2 transition-all cursor-pointer
                                             ${formData.platforms[platform] 
                                                 ? `${config.color} text-white border-transparent` 
-                                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                                                : 'bg-white text-gray-700 border-purple-200 hover:bg-purple-50'}`}
                                     >
                                         <input
                                             type="checkbox"
@@ -202,7 +202,7 @@ const CampaignTasks = () => {
                         <div className="pt-2">
                             <button
                                 type="submit"
-                                className={`w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all flex items-center justify-center
+                                className={`w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-purple-600 to-yellow-500 text-white font-medium rounded-xl shadow-lg hover:shadow-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all flex items-center justify-center
                                     ${!campaign_id ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 disabled={!campaign_id}
                             >
@@ -214,31 +214,37 @@ const CampaignTasks = () => {
 
                 {/* Tasks List */}
                 <div>
-                    <h3 className="text-xl font-bold text-gray-800 flex items-center mb-4">
-                        <FaClipboardList className="text-indigo-500 mr-2" /> Current Tasks
+                    <h3 className="text-xl font-bold text-gray-800 flex items-center mb-6">
+                        <FaClipboardList className="text-yellow-500 mr-2" /> Current Tasks
                     </h3>
                     
                     {loading ? (
                         <div className="text-center py-12">
-                            <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-indigo-600"></div>
-                            <p className="mt-2 text-gray-500">Loading tasks...</p>
+                            <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-purple-200 border-t-yellow-500"></div>
+                            <p className="mt-3 text-purple-500 font-medium">Loading tasks...</p>
                         </div>
                     ) : tasks.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {tasks.map((task, index) => (
-                                <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                                    <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-600"></div>
-                                    <div className="p-5">
+                                <motion.div 
+                                    key={index} 
+                                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 border border-purple-100"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: index * 0.1 }}
+                                >
+                                    <div className="h-2 bg-gradient-to-r from-purple-500 to-yellow-500"></div>
+                                    <div className="p-6">
                                         <div className="flex justify-between items-start mb-4">
-                                            <h4 className="font-semibold text-lg text-gray-800">Task {index + 1}</h4>
-                                            <span className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded-full font-medium">
+                                            <h4 className="font-semibold text-lg text-purple-800">Task {index + 1}</h4>
+                                            <span className="bg-purple-100 text-purple-800 text-xs px-3 py-1 rounded-full font-medium border border-purple-200">
                                                 Due: {new Date(task.due_date).toLocaleDateString()}
                                             </span>
                                         </div>
-                                        <p className="text-gray-600 mb-3">{task.description}</p>
+                                        <p className="text-gray-600 mb-4">{task.description}</p>
                                         {task.goal && (
-                                            <div className="mb-3 flex items-center text-sm">
-                                                <FaFlag className="text-indigo-500 mr-1" />
+                                            <div className="mb-4 flex items-center text-sm">
+                                                <FaFlag className="text-yellow-500 mr-2" />
                                                 <span>Goal: <strong>{task.goal}</strong></span>
                                             </div>
                                         )}
@@ -246,7 +252,7 @@ const CampaignTasks = () => {
                                             {/* Check each platform directly at the task root level */}
                                             {task.facebook && (
                                                 <span 
-                                                    className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${platformConfig.facebook.color} text-white`}
+                                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${platformConfig.facebook.color} text-white`}
                                                 >
                                                     <span className="mr-1">{platformConfig.facebook.icon}</span>
                                                     {platformConfig.facebook.label}
@@ -254,7 +260,7 @@ const CampaignTasks = () => {
                                             )}
                                             {task.youtube && (
                                                 <span 
-                                                    className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${platformConfig.youtube.color} text-white`}
+                                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${platformConfig.youtube.color} text-white`}
                                                 >
                                                     <span className="mr-1">{platformConfig.youtube.icon}</span>
                                                     {platformConfig.youtube.label}
@@ -262,7 +268,7 @@ const CampaignTasks = () => {
                                             )}
                                             {task.instagram && (
                                                 <span 
-                                                    className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${platformConfig.instagram.color} text-white`}
+                                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${platformConfig.instagram.color} text-white`}
                                                 >
                                                     <span className="mr-1">{platformConfig.instagram.icon}</span>
                                                     {platformConfig.instagram.label}
@@ -270,7 +276,7 @@ const CampaignTasks = () => {
                                             )}
                                             {task.tiktok && (
                                                 <span 
-                                                    className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${platformConfig.tiktok.color} text-white`}
+                                                    className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium ${platformConfig.tiktok.color} text-white`}
                                                 >
                                                     <span className="mr-1">{platformConfig.tiktok.icon}</span>
                                                     {platformConfig.tiktok.label}
@@ -278,17 +284,17 @@ const CampaignTasks = () => {
                                             )}
                                         </div>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     ) : (
-                        <div className="bg-white rounded-xl shadow-md p-12 text-center">
-                            <div className="text-gray-400 inline-block mb-4">
-                                <svg className="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <div className="bg-white rounded-xl shadow-lg p-12 text-center border border-purple-100">
+                            <div className="text-purple-200 inline-block mb-4">
+                                <svg className="w-20 h-20 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
                             </div>
-                            <h4 className="text-xl font-medium text-gray-800 mb-2">No Tasks Created</h4>
+                            <h4 className="text-xl font-medium text-purple-800 mb-2">No Tasks Created</h4>
                             <p className="text-gray-500">Start by adding your first task above.</p>
                         </div>
                     )}
