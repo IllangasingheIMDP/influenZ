@@ -1,252 +1,193 @@
 "use client";
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import api from '@/constants/api';
-import moment from 'moment';
-import Image from 'next/image';
 
-const OngoingCampaignCard = ({ campaign, userId }) => {
-  const router = useRouter();
-  const [taskLinks, setTaskLinks] = useState({});
-  const [savingStatus, setSavingStatus] = useState({});
+import React, { useEffect, useState } from "react";
+import Image from "next/image";
+import api from "@/constants/api";
+
+const OngoingComponentCard = ({ campaign, userId, alreadyApplied }) => {
+  const [isHovered, setIsHovered] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [isLoadingTasks, setIsLoadingTasks] = useState(false);
-  const [error, setError] = useState(null);
-  const [isApplying, setIsApplying] = useState(false);
-  const [alreadyApplied, setAlreadyApplied] = useState(false);
+  const [isApplying, setIsApplying] = useState(false); // Track applying state
+  const [error, setError] = useState(null); // Track errors
+  const [taskLinks, setTaskLinks] = useState({}); // Store links for tasks
+  const data = campaign;
 
-  const handleViewDetails = () => {
+  // Fetch tasks of the campaign
+  const fetchTasks = async (campaignId) => {
+    setIsLoadingTasks(true);
+    try {
+      const response = await api.get(`/user/getcampaigntasks/${campaignId}`);
+      setTasks(response.data.data); // Set tasks to the state
+      setIsLoadingTasks(false);
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+      setIsLoadingTasks(false);
+    }
+  };
+
+
+  // Handle saving a link for a task
+  const handleSaveLink = async (taskId) => {
+    const link = taskLinks[taskId];
+    console.log("Saving link:", link, "for task ID:", taskId);
+    if (!link) {
+      setError("Please enter a link before saving.");
+      return;
+    }
+
+    try {
+      const response = await api.post("/influencer/savelink", {
+        task_id: taskId,
+        link: link,
+        userId: userId,
+      });
+
+      if (response.data.success) {
+        alert("Link saved successfully!");
+      } else {
+        setError(response.data.message || "Failed to save the link.");
+      }
+    } catch (err) {
+      setError(
+        err.response?.data?.message || "An error occurred while saving the link."
+      );
+      console.error("Error saving link:", err);
+    }
+  };
+
+  // Handle link input change
+  const handleLinkChange = (taskId, value) => {
+    setTaskLinks((prev) => ({
+      ...prev,
+      [taskId]: value,
+    }));
+  };
+
+  // Format date - card version (short format)
+  const formatCardDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  // Format date - modal version (long format)
+  const formatModalDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Date(date).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
+  const openModal = (e) => {
+    e.preventDefault();
     setIsModalOpen(true);
-    fetchTasks();
+    fetchTasks(data.campaign_id);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
   };
 
-  const fetchTasks = async () => {
-    if (!campaign.tasks) {
-      setIsLoadingTasks(true);
-      try {
-        // If tasks aren't already included in the campaign object, fetch them
-        const response = await api.get(`/campaign-tasks/${campaign.campaign_id}`);
-        setTasks(response.data || []);
-      } catch (error) {
-        console.error("Error fetching tasks:", error);
-        setTasks([]);
-      } finally {
-        setIsLoadingTasks(false);
-      }
-    } else {
-      // Use the tasks already included in the campaign object
-      setTasks(campaign.tasks);
-    }
-  };
-
-  const handleInputChange = (taskId, value) => {
-    setTaskLinks(prev => ({
-      ...prev,
-      [taskId]: value
-    }));
-  };
-
-  const handleSaveLink = async (taskId) => {
-    if (!taskLinks[taskId]) return;
-    
-    setSavingStatus(prev => ({ ...prev, [taskId]: 'saving' }));
-    
-    try {
-      await api.post('/savelink', {
-        user_id: userId,
-        campaign_id: campaign.campaign_id,
-        task_id: taskId,
-        link: taskLinks[taskId]
-      });
-      
-      setSavingStatus(prev => ({ ...prev, [taskId]: 'success' }));
-      
-      // Reset status after 3 seconds
-      setTimeout(() => {
-        setSavingStatus(prev => {
-          const newStatus = { ...prev };
-          delete newStatus[taskId];
-          return newStatus;
-        });
-      }, 3000);
-      
-    } catch (error) {
-      console.error("Error saving link:", error);
-      setSavingStatus(prev => ({ ...prev, [taskId]: 'error' }));
-      
-      // Reset status after 3 seconds
-      setTimeout(() => {
-        setSavingStatus(prev => {
-          const newStatus = { ...prev };
-          delete newStatus[taskId];
-          return newStatus;
-        });
-      }, 3000);
-    }
-  };
-
-  const handleApplyToCampaign = async (campaignId, userId) => {
-    setIsApplying(true);
-    setError(null);
-    
-    try {
-      await api.post('/apply-campaign', {
-        user_id: userId,
-        campaign_id: campaignId
-      });
-      setAlreadyApplied(true);
-    } catch (error) {
-      console.error("Error applying to campaign:", error);
-      setError("Failed to apply for this campaign. Please try again.");
-    } finally {
-      setIsApplying(false);
-    }
-  };
-
-  const formatModalDate = (date) => {
-    return moment(date).format('MMM DD, YYYY');
-  };
-
-  const renderSaveButton = (taskId) => {
-    const status = savingStatus[taskId];
-    
-    if (status === 'saving') {
-      return (
-        <button disabled className="ml-2 px-3 py-1 bg-gray-400 text-white rounded-md flex items-center">
-          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          Saving
-        </button>
-      );
-    } else if (status === 'success') {
-      return (
-        <button disabled className="ml-2 px-3 py-1 bg-green-500 text-white rounded-md flex items-center">
-          <svg className="-ml-1 mr-2 h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-          </svg>
-          Saved
-        </button>
-      );
-    } else if (status === 'error') {
-      return (
-        <button disabled className="ml-2 px-3 py-1 bg-red-500 text-white rounded-md flex items-center">
-          <svg className="-ml-1 mr-2 h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          Error
-        </button>
-      );
-    }
-    
-    return (
-      <button 
-        onClick={() => handleSaveLink(taskId)}
-        className="ml-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
-      >
-        Save
-      </button>
-    );
-  };
-
   return (
     <>
-      <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 transition-all duration-300 hover:shadow-xl">
-        {/* Campaign Image */}
-        <div className="h-48 w-full relative overflow-hidden">
-          <img 
-            src={campaign.campaign_img || '/images/default-campaign.jpg'} 
-            alt={campaign.campaign_name} 
-            className="w-full h-full object-cover"
+      {/* Campaign Card */}
+      <div
+        className="relative w-64 h-96 rounded-lg overflow-hidden cursor-pointer transform transition-all duration-300 ease-in-out bg-white shadow-lg"
+        style={{
+          transform: isHovered ? "translateY(-8px)" : "translateY(0)",
+          boxShadow: isHovered
+            ? "0 15px 30px rgba(0, 0, 0, 0.1)"
+            : "0 5px 15px rgba(0, 0, 0, 0.05)",
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="relative h-40 overflow-hidden">
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10"
+            style={{
+              opacity: isHovered ? 0.9 : 0.7,
+              transition: "opacity 0.3s ease",
+            }}
           />
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black opacity-70"></div>
-          <div className="absolute bottom-4 left-4">
-            <span className="bg-blue-600 text-white text-xs font-semibold px-2 py-1 rounded">
-              Ongoing
-            </span>
+          <div className="relative w-full h-full">
+            <Image
+              src={data.imageUrl || "/loginwomen.svg"}
+              alt={data.name || "Campaign Image"}
+              fill
+              sizes="(max-width: 768px) 100vw, 300px"
+              className="object-cover transition-transform duration-500 ease-in-out"
+              style={{ transform: isHovered ? "scale(1.05)" : "scale(1)" }}
+            />
+          </div>
+          <div className="absolute top-3 right-3 bg-white/90 text-xs font-semibold px-2 py-1 rounded-full z-20">
+            {formatCardDate(data.startdate)}
           </div>
         </div>
 
-        <div className="p-5">
-          {/* Campaign Name and Description */}
-          <h3 className="text-xl font-bold mb-2 line-clamp-1">{campaign.campaign_name}</h3>
-          <p className="text-gray-600 text-sm mb-4 line-clamp-2">{campaign.campaign_description || campaign.description}</p>
-          
-          {/* Campaign Details */}
-          <div className="mb-4">
-            <div className="flex items-center mb-2">
-              <svg className="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              <span className="text-sm text-gray-600">
-                {moment(campaign.start_date || campaign.startdate).format('MMM DD')} - {moment(campaign.end_date || campaign.enddate).format('MMM DD, YYYY')}
-              </span>
-            </div>
-            
-            <div className="flex items-center">
-              <svg className="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <span className="text-sm text-gray-600">${campaign.budget}</span>
-            </div>
-          </div>
+        <div className="p-4">
+          <h3
+            className="text-lg font-bold text-gray-800 mb-1 transition-colors duration-300"
+            style={{ color: isHovered ? "#3b82f6" : "#1f2937" }}
+          >
+            {data.campaign_name}
+          </h3>
+          <p className="text-sm text-gray-600 mb-3">
+            by <span className="font-medium">{data.company_name}</span>
+          </p>
 
-          {/* Tasks Section */}
-          <div className="mb-4">
-            <h4 className="font-semibold text-sm mb-2">Tasks:</h4>
-            <ul className="space-y-3">
-              {campaign.tasks && campaign.tasks.map((task) => (
-                <li key={task.task_id} className="border-b border-gray-100 pb-3">
-                  <p className="text-sm mb-2">{task.task_description || task.description}</p>
-                  <div className="flex flex-wrap items-center">
-                    <input
-                      type="text"
-                      placeholder="Add link for this task"
-                      value={taskLinks[task.task_id] || ''}
-                      onChange={(e) => handleInputChange(task.task_id, e.target.value)}
-                      className="flex-1 text-sm px-3 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    />
-                    {renderSaveButton(task.task_id)}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Keywords */}
-          {campaign.keywords && campaign.keywords.length > 0 && (
-            <div className="mb-4">
-              <div className="flex flex-wrap gap-1">
-                {campaign.keywords.map((keyword, index) => (
-                  <span key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
+          <div className="mb-12">
+            <div className="flex flex-wrap gap-1">
+              {data.keywords &&
+                data.keywords.map((keyword, index) => (
+                  <span
+                    key={index}
+                    className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full transition-all duration-300"
+                    style={{
+                      transform: isHovered ? "scale(1.05)" : "scale(1)",
+                      background: isHovered ? "#f3f4f6" : "#f1f1f1",
+                    }}
+                  >
                     {keyword}
                   </span>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
 
-          {/* View Details Button */}
-          <button
-            onClick={handleViewDetails}
-            className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors duration-200 font-medium mt-2"
-          >
-            View Details
-          </button>
+          <div className="absolute bottom-4 left-4 right-4">
+            <button
+              onClick={openModal}
+              className="w-full py-2 rounded-md font-medium transition-all duration-300 ease-in-out text-sm"
+              style={{
+                background: isHovered
+                  ? "linear-gradient(90deg, #3b82f6, #60a5fa)"
+                  : "#f3f4f6",
+                color: isHovered ? "white" : "#4b5563",
+              }}
+            >
+              View More
+            </button>
+          </div>
         </div>
+
+        {data.isPremium && (
+          <div className="absolute top-0 left-0 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold py-1 px-3 rounded-br-lg z-20">
+            PREMIUM
+          </div>
+        )}
       </div>
 
       {/* Campaign Detail Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-xl">
-            {/* Close button */}
             <button
               onClick={closeModal}
               className="absolute top-4 right-4 bg-white rounded-full p-1 shadow-md hover:bg-gray-100 transition-colors"
@@ -267,59 +208,52 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
               </svg>
             </button>
 
-            {/* Campaign image with overlay */}
             <div className="relative h-64 w-full">
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
               <div className="relative w-full h-full">
                 <Image
-                  src={campaign.campaign_img || campaign.imageUrl || "/loginwomen.svg"}
-                  alt={campaign.campaign_name || "Campaign Image"}
+                  src={data.imageUrl || "/loginwomen.svg"}
+                  alt={data.name || "Campaign Image"}
                   fill
                   sizes="(max-width: 768px) 100vw, 600px"
                   className="object-cover"
                 />
               </div>
 
-              {/* Campaign name overlay */}
               <div className="absolute bottom-0 left-0 z-20 p-6 w-full">
                 <h2 className="text-2xl font-bold text-white">
-                  {campaign.campaign_name}
+                  {data.campaign_name}
                 </h2>
-                <p className="text-white/90 text-lg">by {campaign.company_name}</p>
+                <p className="text-white/90 text-lg">by {data.company_name}</p>
               </div>
             </div>
 
-            {/* Campaign details */}
             <div className="p-6 space-y-6">
-              {/* Description */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Description
                 </h3>
-                <p className="text-gray-600">{campaign.campaign_description || campaign.description}</p>
+                <p className="text-gray-600">{data.description}</p>
               </div>
 
-              {/* Goals */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Campaign Goals
                 </h3>
-                <p className="text-gray-600">{campaign.goals}</p>
+                <p className="text-gray-600">{data.goals}</p>
               </div>
 
-              {/* Budget */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Budget
                 </h3>
                 <div className="bg-blue-50 rounded-lg p-3 inline-block">
                   <span className="text-blue-600 font-semibold">
-                    ${campaign.budget}
+                    {data.budget}
                   </span>
                 </div>
               </div>
 
-              {/* Campaign Period */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Campaign Period
@@ -328,7 +262,7 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                   <div className="bg-gray-100 rounded-lg p-3">
                     <p className="text-sm text-gray-500">Start Date</p>
                     <p className="font-medium">
-                      {formatModalDate(campaign.start_date || campaign.startdate)}
+                      {formatModalDate(data.startdate)}
                     </p>
                   </div>
                   <svg
@@ -348,13 +282,13 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                   <div className="bg-gray-100 rounded-lg p-3">
                     <p className="text-sm text-gray-500">End Date</p>
                     <p className="font-medium">
-                      {formatModalDate(campaign.end_date || campaign.enddate)}
+                      {formatModalDate(data.enddate)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Tasks with input fields for links */}
+              {/* Tasks with Input Fields and Save Buttons */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Tasks
@@ -362,25 +296,32 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                 {isLoadingTasks ? (
                   <p>Loading tasks...</p>
                 ) : (
-                  <ul className="space-y-4">
+                  <ul className="list-disc pl-6 space-y-4">
                     {tasks.length > 0 ? (
-                      tasks.map((task) => (
-                        <li key={task.task_id} className="border-b border-gray-100 pb-4">
-                          <div className="mb-2">
-                            <strong className="text-gray-700">{task.task_description || task.description}</strong>
+                      tasks.map((task, index) => (
+                        <li key={index} className="text-gray-600">
+                          <div>
+                            <strong>{task.description}</strong>
                             <div className="text-sm text-gray-500">
-                              Due: {task.due_date ? formatModalDate(task.due_date) : 'Not specified'}
+                              Due: {task.due_date}
                             </div>
                           </div>
-                          <div className="flex flex-wrap items-center mt-2">
+                          <div className="mt-2 flex items-center gap-2">
                             <input
                               type="text"
-                              placeholder="Add link for this task"
-                              value={taskLinks[task.task_id] || ''}
-                              onChange={(e) => handleInputChange(task.task_id, e.target.value)}
-                              className="flex-1 text-sm px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500"
+                              placeholder="Enter link"
+                              value={taskLinks[task.task_id] || ""}
+                              onChange={(e) =>
+                                handleLinkChange(task.task_id, e.target.value)
+                              }
+                              className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
                             />
-                            {renderSaveButton(task.task_id)}
+                            <button
+                              onClick={() => handleSaveLink(task.task_id)}
+                              className="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+                            >
+                              Save
+                            </button>
                           </div>
                         </li>
                       ))
@@ -391,14 +332,13 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                 )}
               </div>
 
-              {/* Keywords */}
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   Keywords
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {campaign.keywords &&
-                    campaign.keywords.map((keyword, index) => (
+                  {data.keywords &&
+                    data.keywords.map((keyword, index) => (
                       <span
                         key={index}
                         className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full"
@@ -409,13 +349,11 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                 </div>
               </div>
 
-              {/* Apply Button - Only shown if needed (keeping from original modal) */}
               <div className="pt-4 border-t border-gray-200">
                 {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
-                
                 {!alreadyApplied ? (
                   <button
-                    onClick={() => handleApplyToCampaign(campaign.campaign_id, userId)}
+                    onClick={() => handleApplyToCampaign(data.campaign_id, userId)}
                     className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center justify-center gap-2 transition-colors disabled:bg-gray-400"
                     disabled={isApplying}
                   >
@@ -441,7 +379,9 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
                       </>
                     )}
                   </button>
-                ) : null}
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
           </div>
@@ -451,4 +391,4 @@ const OngoingCampaignCard = ({ campaign, userId }) => {
   );
 };
 
-export default OngoingCampaignCard;
+export default OngoingComponentCard;

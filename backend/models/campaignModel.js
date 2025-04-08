@@ -60,7 +60,7 @@ JOIN
   }
   static async getCampaignTasks(campaignId) {
     try {
-      const query = `select description , due_date , status
+      const query = `select task_id,description , due_date , status
                     from tasks
                     where campaign_id = $1`;
       const values = [campaignId];
@@ -103,6 +103,22 @@ JOIN
       return result.rows[0];
     } catch (error) {
       throw new Error('Error applying to campaign: ' + error.message);
+    }
+  }
+
+  static async saveLink(link,task_id,influencer_id) {
+    console.log("influencer_id in model",influencer_id);
+    try {
+      console.log("inside the model saveLink function");
+      const query = `UPDATE influencertasks 
+                SET link = $1
+                WHERE task_id = $2 and influencer_id=$3;`;
+      const values = [link, task_id,influencer_id];
+      await pool.query(query, values);
+      return { success: true };
+    } catch (error) {
+      console.error("Error saving link:", error);
+      throw new Error("Error saving link");
     }
   }
 }

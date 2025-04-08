@@ -3,6 +3,7 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 const InfluencerController = require('../controllers/influencerController');
 const multer = require('multer');
+const campaignController = require('../controllers/campaignController');
 
 // Configure multer for file uploads
 const upload = multer({ storage: multer.memoryStorage() });
@@ -17,5 +18,7 @@ router.get('/profile-pic/:userId',authMiddleware(['influencer','brand','admin'])
 router.get('/profile/:userId', authMiddleware(['influencer','brand','admin']), InfluencerController.getInfluencerProfile);
 router.put('/update-tags', authMiddleware(['influencer']), InfluencerController.updateTags);
 router.get('/verified-influencers-and-brands', authMiddleware(['admin','brand','influencer']), InfluencerController.getAllInfluencersVerified);
+router.post('/savelink', authMiddleware(['influencer']), campaignController.saveLink);
+router.get('getsavedlinks/${campaignId}', authMiddleware(['influencer']), campaignController.getSavedLinks);
 
 module.exports = router;
