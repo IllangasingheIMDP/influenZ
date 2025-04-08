@@ -124,7 +124,7 @@ class BrandModel {
           SELECT t.task_id, t.description, t.due_date, t.status, t.completed_at, 
                  t.facebook, t.youtube, t.instagram, t.tiktok, 
                  it.expected, it.got, it.start_date, it.end_date, it.status as influencer_status,it.link,
-                 u."firstName", u."lastName"
+                 u."firstName", u."lastName",u.email
           FROM tasks t
           LEFT JOIN InfluencerTasks it ON t.task_id = it.task_id
           LEFT JOIN influencers i ON it.influencer_id = i.influencer_id
@@ -187,12 +187,8 @@ class BrandModel {
         return rows[0];
       }
 
-      static async rejectInfluencer(campaign_id, influencer_id) {
-        await pool.query(
-          "UPDATE campaigninfluencers SET status = 'rejected' WHERE campaign_id = $1 AND influencer_id = $2",
-          [campaign_id, influencer_id]
-        );
-      }
+
+      
       
 
      
@@ -235,7 +231,7 @@ class BrandModel {
         }
       }
 
-      static async acceptInfluencer(campaign_id, influencer_id) {
+      static async acceptInfluencer(campaign_id, influencer_id, USERID, user_id) {
         // Update campaigninfluencers table
         await pool.query(
           "UPDATE campaigninfluencers SET status = 'accepted' WHERE campaign_id = $1 AND influencer_id = $2",
@@ -247,7 +243,69 @@ class BrandModel {
           "UPDATE campaigns SET status = 'active' WHERE campaign_id = $1",
           [campaign_id]
         );
+      
+        // Get company_name from brands table where user_id = USERID
+        const brandResult = await pool.query(
+          "SELECT company_name FROM brands WHERE user_id = $1",
+          [USERID]
+        );
+        const company_name = brandResult.rows[0]?.company_name;
+      
+        // Get campaign name from campaigns table
+        const campaignResult = await pool.query(
+          "SELECT name FROM campaigns WHERE campaign_id = $1",
+          [campaign_id]
+        );
+        const campaign_name = campaignResult.rows[0]?.name;
+      
+        // Construct notification message
+        const notificationMessage = `${company_name} has accepted your request for campaign "${campaign_name}"`;
+      
+        // Insert into notifications table
+        await pool.query(
+          "INSERT INTO notifications (user_id, notification) VALUES ($1, $2)",
+          [user_id, notificationMessage]
+        );
       }
+
+
+      static async rejectInfluencer(campaign_id, influencer_id, USERID, user_id) {
+        // Update campaigninfluencers table
+        await pool.query(
+          "UPDATE campaigninfluencers SET status = 'rejected' WHERE campaign_id = $1 AND influencer_id = $2",
+          [campaign_id, influencer_id]
+        );
+      
+        // Update campaigns table status to 'active'
+        
+      
+        // Get company_name from brands table where user_id = USERID
+        const brandResult = await pool.query(
+          "SELECT company_name FROM brands WHERE user_id = $1",
+          [USERID]
+        );
+        const company_name = brandResult.rows[0]?.company_name;
+      
+        // Get campaign name from campaigns table
+        const campaignResult = await pool.query(
+          "SELECT name FROM campaigns WHERE campaign_id = $1",
+          [campaign_id]
+        );
+        const campaign_name = campaignResult.rows[0]?.name;
+      
+        // Construct notification message
+        const notificationMessage = `${company_name} has rejected your request for campaign "${campaign_name}"`;
+      
+        // Insert into notifications table
+        await pool.query(
+          "INSERT INTO notifications (user_id, notification) VALUES ($1, $2)",
+          [user_id, notificationMessage]
+        );
+      }
+      
+
+
+      
 
 
       static async getBrandsByUserId(user_id) {
