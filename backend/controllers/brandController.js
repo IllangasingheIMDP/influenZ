@@ -6,13 +6,13 @@ class BrandController {
             
             const userID = req.user.userId;
             
-            const { name, description, expectedReach, budget, startDate, endDate, youtube, facebook, instagram, tiktok } = req.body;
+            const { name, description, expectedReach, budget, startDate, endDate, youtube, facebook, instagram, tiktok,camp_img } = req.body;
 
             if (!name || !description || !expectedReach || !budget || !startDate || !endDate) {
                 return res.status(400).json({ message: "All required fields must be provided." });
             }
 
-            const campaign = await BrandModel.createCampaign(userID,name, description, expectedReach, budget, startDate, endDate, youtube, facebook, instagram, tiktok);
+            const campaign = await BrandModel.createCampaign(userID,name, description, expectedReach, budget, startDate, endDate, youtube, facebook, instagram, tiktok,camp_img);
 
             res.status(201).json({ message: "Campaign created successfully!", campaign });
         } catch (error) {
