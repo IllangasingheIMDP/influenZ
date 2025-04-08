@@ -19,7 +19,10 @@ const campaignRoutes = require('./routes/campaignRoute');
 const adminRoutes = require('./routes/adminRoute');
 // CORS configuration to allow frontend communication
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://influen-z-git-main-dasun-illangasinghes-projects.vercel.app'
+  ],
   credentials: true,
 }));
 app.use(express.json());
