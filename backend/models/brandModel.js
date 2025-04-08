@@ -123,7 +123,7 @@ class BrandModel {
         const query = `
           SELECT t.task_id, t.description, t.due_date, t.status, t.completed_at, 
                  t.facebook, t.youtube, t.instagram, t.tiktok, 
-                 it.expected, it.got, it.start_date, it.end_date, it.status as influencer_status,it.link,
+                 t.goal as expected, it.got, it.start_date, it.end_date, it.status as influencer_status,it.link,
                  u."firstName", u."lastName",u.email
           FROM tasks t
           LEFT JOIN InfluencerTasks it ON t.task_id = it.task_id
