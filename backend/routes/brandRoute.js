@@ -18,9 +18,13 @@ router.put('/reject', authMiddleware(['brand']), BrandController.rejectInfluence
 router.post("/accept-applicant",authMiddleware(['brand']), BrandController.acceptApplicant);
 router.get('/details/:userId', authMiddleware(['brand','influencer']), BrandController.getUserBrands);
 router.get("/most-interacted/:userId", authMiddleware(['brand']), BrandController.getMostInteractedInfluencers);
-router.get('/notifications',authMiddleware(['brand']), BrandController.getNotifications);
-router.patch('/notifications/:notificationId/read',authMiddleware(['brand']), BrandController.markAsRead);
+
+router.get('/notifications',authMiddleware(['brand','influencer']), BrandController.getNotifications);
+router.patch('/notifications/:notificationId/read',authMiddleware(['brand','influencer']), BrandController.markAsRead);
+
+
 router.get('/company-pics', BrandController.getCompanyPics);
 router.get('/influencers', BrandController.fetchInfluencers);
+
 
 module.exports = router;
