@@ -1,6 +1,8 @@
 # Influenz - Influencer Marketing Platform
 
 **Influenz** is a web application designed to connect influencers and brands for marketing campaigns. It provides features like influencer verification, social media integration, campaign management, and admin oversight. The platform supports multi-step verification for influencers, including email verification, identity card upload, and social media handle submission, with admin approval workflows.
+### Live Link
+ https://influen-z-git-main-dasun-illangasinghes-projects.vercel.app
 
 ## Table of Contents
 - [Features](#features)
